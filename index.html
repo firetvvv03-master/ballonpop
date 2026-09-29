@@ -142,83 +142,6 @@
             animation: slideInBanner 1.6s ease-in-out forwards;
         }
 
-        /* Weather animations */
-        @keyframes sweepWind {
-            0% { transform: translateX(-200px); opacity: 0; }
-            20% { opacity: 0.9; }
-            80% { opacity: 0.9; }
-            100% { transform: translateX(calc(100vw + 200px)); opacity: 0; }
-        }
-        .wind-arrow-sweep {
-            position: absolute;
-            font-size: 38px;
-            pointer-events: none;
-            animation: sweepWind 3s linear forwards;
-            z-index: 25;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.8));
-        }
-
-        @keyframes driftCloud {
-            0% { transform: translateX(-250px); }
-            100% { transform: translateX(calc(100vw + 300px)); }
-        }
-        .cloud-element {
-            position: absolute;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(226, 232, 240, 0.8));
-            border-radius: 9999px;
-            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.4), inset 0 2px 6px rgba(255, 255, 255, 0.9);
-            filter: blur(0.5px);
-            pointer-events: none;
-            animation: driftCloud 14s linear infinite;
-            z-index: 35;
-        }
-        .cloud-element::before, .cloud-element::after {
-            content: '';
-            position: absolute;
-            background: inherit;
-            border-radius: 50%;
-        }
-        .cloud-element::before {
-            width: 55%;
-            height: 120%;
-            top: -50%;
-            left: 20%;
-        }
-        .cloud-element::after {
-            width: 45%;
-            height: 90%;
-            top: -30%;
-            right: 15%;
-        }
-
-        @keyframes fallRain {
-            0% { transform: translateY(-20px); opacity: 0; }
-            50% { opacity: 0.7; }
-            100% { transform: translateY(450px); opacity: 0; }
-        }
-        .rain-drop {
-            position: absolute;
-            width: 2px;
-            height: 18px;
-            background: linear-gradient(to bottom, transparent, rgba(96, 165, 250, 0.9));
-            pointer-events: none;
-            animation: fallRain 0.6s linear infinite;
-            z-index: 25;
-        }
-
-        @keyframes fallSnow {
-            0% { transform: translateY(-10px) translateX(0px); opacity: 0; }
-            50% { opacity: 0.9; transform: translateY(200px) translateX(15px); }
-            100% { transform: translateY(440px) translateX(-15px); opacity: 0; }
-        }
-        .snow-flake {
-            position: absolute;
-            font-size: 16px;
-            pointer-events: none;
-            animation: fallSnow 2.5s linear infinite;
-            z-index: 25;
-        }
-
         .frozen-screen {
             box-shadow: inset 0 0 60px rgba(147, 197, 253, 0.9);
             border-color: #93c5fd !important;
@@ -305,7 +228,7 @@
 
     <main class="relative w-full max-w-4xl flex-grow flex flex-col items-center justify-center p-3 overflow-hidden">
         
-        <!-- Action Bar: Upgrades, Achievements & Quests -->
+        <!-- Action Bar: Upgrades, Achievements & Quests (Upgrade button under Arena screen removed per request) -->
         <div class="w-full bg-slate-900/90 backdrop-blur-md border border-slate-800 p-2 rounded-2xl mb-2 flex flex-wrap items-center justify-between gap-2 shadow-lg z-20">
             <div class="flex items-center gap-2">
                 <button onclick="openShopModal()" class="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white arcade-font px-3 py-1.5 rounded-xl shadow-lg transition-all border border-indigo-400 active:scale-95 cursor-pointer text-xs">
@@ -333,11 +256,6 @@
 
         <div id="gameArena" class="relative w-full h-[360px] sm:h-[440px] bg-gradient-to-b from-indigo-950 via-slate-900 to-slate-950 rounded-3xl border-2 border-indigo-500/30 shadow-2xl overflow-hidden flex flex-col items-center justify-center select-none transition-all duration-300">
             
-            <!-- Weather Banner: Dynamic UI badge at the top of the arena -->
-            <div id="weatherBanner" class="absolute top-3 left-1/2 -translate-x-1/2 bg-sky-950/90 border-2 border-sky-400/80 text-sky-200 px-4 py-1 rounded-full shadow-[0_0_20px_rgba(56,189,248,0.5)] text-xs uppercase tracking-wider z-45 arcade-font flex items-center gap-1.5 transition-all">
-                <span id="weatherIcon">☀️</span> Weather: <span id="weatherTitle" class="font-bold text-white">Clear Skies</span>
-            </div>
-
             <!-- Background ambient grid -->
             <div class="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:24px_24px]"></div>
 
@@ -349,12 +267,9 @@
             </div>
 
             <!-- Mini-Game Event Banner Overlay -->
-            <div id="eventBannerOverlay" class="absolute top-14 bg-amber-600/95 border-2 border-yellow-300 text-white font-bold px-4 py-1.5 rounded-full shadow-2xl text-xs uppercase tracking-wider transition-all opacity-0 pointer-events-none z-45 arcade-font">
+            <div id="eventBannerOverlay" class="absolute top-12 bg-amber-600/95 border-2 border-yellow-300 text-white font-bold px-4 py-1.5 rounded-full shadow-2xl text-xs uppercase tracking-wider transition-all opacity-0 pointer-events-none z-45 arcade-font">
                 ✨ MINI-GAME EVENT ACTIVE! ✨
             </div>
-
-            <!-- Weather Layer for dynamic effects -->
-            <div id="weatherLayer" class="absolute inset-0 pointer-events-none z-35 overflow-hidden"></div>
 
             <!-- Floating Text container -->
             <div id="floatingTextContainer" class="absolute inset-0 pointer-events-none overflow-hidden z-40"></div>
@@ -366,14 +281,14 @@
             <div id="balloonLayer" class="absolute inset-0 pointer-events-none z-30 overflow-hidden"></div>
 
             <!-- Active Power Indicator Banner -->
-            <div id="activePowerBanner" class="absolute bottom-14 bg-indigo-600/90 border border-indigo-400 text-white font-bold px-3 py-1 rounded-full shadow-lg text-[11px] uppercase tracking-wider transition-all opacity-0 pointer-events-none z-30">
+            <div id="activePowerBanner" class="absolute top-3 bg-indigo-600/90 border border-indigo-400 text-white font-bold px-3 py-1 rounded-full shadow-lg text-[11px] uppercase tracking-wider transition-all opacity-0 pointer-events-none z-30">
                 Power Active!
             </div>
 
             <!-- Active Pets Visual Render Layer -->
             <div id="arenaPetsLayer" class="absolute bottom-3 left-3 flex flex-col gap-1.5 pointer-events-none z-40"></div>
 
-            <!-- Throwing Hand Character -->
+            <!-- Throwing Hand Character (Matches selected hand skin image/icon) -->
             <div id="throwingHand" class="absolute bottom-2 left-1/2 -translate-x-1/2 text-5xl pointer-events-none z-40 drop-shadow-[0_12px_12px_rgba(0,0,0,0.8)] transition-transform origin-bottom">
                 🦾
             </div>
@@ -544,6 +459,7 @@
         let currentObjectSkinId = localStorage.getItem('balloonObjSkin') || 'needle'; 
         let currentThemeId = localStorage.getItem('balloonTheme') || 'cyber';
         
+        // Load saved pets array safely
         let activePetIds = [];
         try {
             activePetIds = JSON.parse(localStorage.getItem('balloonActivePets')) || [];
@@ -553,16 +469,6 @@
         let pendingAdPetId = null;
         let activeMiniGameEvent = null;
 
-        // Weather System State
-        let currentWeather = 'clear'; // 'clear', 'windy', 'stormy', 'cloudy', 'snowy'
-        const weatherTypes = [
-            { id: 'clear', name: 'Clear Skies', icon: '☀️' },
-            { id: 'windy', name: 'Windy Day', icon: '💨' },
-            { id: 'stormy', name: 'Stormy Rain', icon: '🌧' },
-            { id: 'cloudy', name: 'Cloudy Day', icon: '☁️' },
-            { id: 'snowy', name: 'Snowy Blizzard', icon: '❄️' }
-        ];
-
         // Arena Themes Configuration
         const themes = [
             { id: 'cyber', name: 'Neon Cyber', gradient: 'bg-gradient-to-b from-indigo-950 via-slate-900 to-slate-950', border: 'border-indigo-500/35', unlocked: true, price: 0 },
@@ -571,6 +477,7 @@
             { id: 'void', name: 'Void Abyss', gradient: 'bg-gradient-to-b from-black via-zinc-950 to-slate-950', border: 'border-red-600/50', unlocked: false, price: 800 }
         ];
 
+        // 4 Max Throwing Hand Skins (Saves skin choice & maps to user skin image/emoji correctly)
         const handSkins = [
             { id: 'hand_standard', name: 'Standard Mech Arm', icon: '🦾', desc: 'Standard robotic arm', unlocked: true, price: 0 },
             { id: 'hand_gold', name: 'Golden Cyber-Arm', icon: '🦾✨', desc: 'Gilded high-speed precision arm', unlocked: false, price: 400 },
@@ -578,6 +485,7 @@
             { id: 'hand_quantum', name: 'Quantum Mecha-Glove', icon: '🦾⚡', desc: 'Futuristic hyper-velocity glove', unlocked: false, price: 1200 }
         ];
 
+        // 4 Max Throwing Object Skins (Throwing skill made bigger and more visible)
         const objectSkins = [
             { id: 'needle', name: 'Precision Needle', icon: '📍', desc: 'Swift piercing needles', unlocked: true, price: 0 },
             { id: 'rock', name: 'Heavy Rock Boulder', icon: '🪨', desc: 'Crushing boulders with deep impacts', unlocked: false, price: 200 },
@@ -585,6 +493,7 @@
             { id: 'plasma_orb', name: 'Arcane Plasma Orb', icon: '🔮', desc: 'Pure concentrated energy spheres', unlocked: false, price: 900 }
         ];
 
+        // Hardcore Daily Quests
         let quests = [
             { id: 'q1', title: 'Hardcore Popper I', desc: 'Pop 100 balloons in a single run', target: 100, progress: 0, rewardCoins: 500, completed: false, claimed: false },
             { id: 'q2', title: 'Boss Executioner I', desc: 'Defeat 5 Boss balloons in total', target: 5, progress: 0, rewardCoins: 800, completed: false, claimed: false },
@@ -593,12 +502,14 @@
             { id: 'q5', title: 'Level Climber I', desc: 'Reach Level 10 in a single run', target: 10, progress: 0, rewardCoins: 1200, completed: false, claimed: false }
         ];
 
+        // Progressive Milestone Achievements (Infinite scaling tiers: once finished, next harder tier appears automatically and saves permanently without reset)
         let achievements = [
             { id: 'ach_score_t1', category: 'score', tier: 1, title: 'Centurion Master I', desc: 'Score 2,500 points', target: 2500, rewardCoins: 1500, unlocked: false },
             { id: 'ach_level_t1', category: 'level', tier: 1, title: 'Apocalyptic Survivor I', desc: 'Reach Level 15', target: 15, rewardCoins: 2500, unlocked: false },
             { id: 'ach_coins_t1', category: 'coins', tier: 1, title: 'Tycoon Millionaire I', desc: 'Accumulate 5,000 coins earned', target: 5000, rewardCoins: 3000, unlocked: false }
         ];
 
+        // Load saved achievements state if any
         try {
             const savedAch = JSON.parse(localStorage.getItem('balloonAchievementsState'));
             if (savedAch && Array.isArray(savedAch)) {
@@ -803,7 +714,7 @@
             { id: 'frenzy', name: 'Frenzy Spark', color: 'bg-gradient-to-tr from-amber-200 via-yellow-400 to-orange-500 border-2 border-yellow-100', shadow: 'shadow-[0_0_30px_rgba(252,211,77,1)]', score: 90, baseHp: 3, frenzy: true, chance: 5, icon: '🔥', damageValue: 0.5, powerDesc: 'Skill: Arena Frenzy! (0.5 HP dmg)' },
             { id: 'bomb', name: 'Explosive Bomb', color: 'bg-gradient-to-tr from-zinc-900 via-red-950 to-black border-2 border-red-500', shadow: 'shadow-[0_0_25px_rgba(239,68,68,0.9)]', score: 40, baseHp: 1, bomb: true, chance: 6, icon: '💣', damageValue: 4.0, powerDesc: 'Bomb! Deals 4-6 health damage to all balloons' },
             
-            /* Bosses */
+            /* Regular Bosses */
             { id: 'boss', name: 'Mega Sovereign Boss', color: 'bg-gradient-to-tr from-red-950 via-purple-900 to-black border-4 border-yellow-400', shadow: 'shadow-[0_0_70px_rgba(239,68,68,1)]', score: 450, baseHp: 8, coins: 80, chance: 4, icon: '👑🔥', speedMult: 0.55, isBoss: true, isSlightlySmaller: true, damageValue: 1.0, powerDesc: 'Mega Boss! (1.0 HP dmg)' },
             { id: 'boss_prism', name: 'Prism Titan', color: 'bg-gradient-to-tr from-cyan-950 via-blue-900 to-indigo-950 border-4 border-cyan-300', shadow: 'shadow-[0_0_75px_rgba(6,182,212,1)]', score: 600, baseHp: 12, coins: 110, chance: 3, icon: '💎⚡', speedMult: 0.5, prism: true, isBoss: true, isSlightlySmaller: true, damageValue: 1.0, powerDesc: 'Titan Boss! (1.0 HP dmg)' },
             { id: 'boss_inferno', name: 'Inferno Overlord', color: 'bg-gradient-to-tr from-black via-red-950 to-orange-900 border-4 border-yellow-500', shadow: 'shadow-[0_0_80px_rgba(249,115,22,1)]', score: 750, baseHp: 15, coins: 140, chance: 2, icon: '🔥👑', speedMult: 0.45, inferno: true, isBoss: true, isSlightlySmaller: true, damageValue: 1.0, powerDesc: 'Overlord Boss! (1.0 HP dmg)' },
@@ -822,125 +733,11 @@
         let warningTriggeredForLevel35 = false;
         let warningTriggeredForLevel45 = false;
 
-        // Weather Cycle Trigger every 25 seconds
-        setInterval(() => {
-            if (isGameOver || isPaused) return;
-            cycleWeather();
-        }, 25000);
-
-        function cycleWeather() {
-            const randIndex = Math.floor(Math.random() * weatherTypes.length);
-            currentWeather = weatherTypes[randIndex].id;
-            updateWeatherBannerUI();
-            setupWeatherVisuals();
-            showFloatingText(`🌤️️ Weather Changed: ${weatherTypes[randIndex].name}!`, window.innerWidth / 2, 80, "text-sky-300");
-        }
-
-        function updateWeatherBannerUI() {
-            const wObj = weatherTypes.find(w => w.id === currentWeather) || weatherTypes[0];
-            document.getElementById('weatherIcon').textContent = wObj.icon;
-            document.getElementById('weatherTitle').textContent = wObj.name;
-        }
-
-        function setupWeatherVisuals() {
-            const layer = document.getElementById('weatherLayer');
-            if (!layer) return;
-            layer.innerHTML = '';
-
-            if (currentWeather === 'windy') {
-                startWindSweepInterval();
-            } else if (currentWeather === 'stormy') {
-                for (let i = 0; i < 25; i++) {
-                    const drop = document.createElement('div');
-                    drop.className = 'rain-drop';
-                    drop.style.left = `${Math.random() * 100}%`;
-                    drop.style.animationDelay = `${Math.random() * 0.6}s`;
-                    drop.style.animationDuration = `${0.4 + Math.random() * 0.3}s`;
-                    layer.appendChild(drop);
-                }
-            } else if (currentWeather === 'cloudy') {
-                for (let i = 0; i < 4; i++) {
-                    const cloud = document.createElement('div');
-                    cloud.className = 'cloud-element';
-                    cloud.style.width = `${160 + Math.random() * 90}px`;
-                    cloud.style.height = `${60 + Math.random() * 35}px`;
-                    cloud.style.top = `${15 + (i * 70) + Math.random() * 40}px`;
-                    cloud.style.animationDuration = `${12 + Math.random() * 8}s`;
-                    cloud.style.animationDelay = `${i * -3.5}s`;
-                    layer.appendChild(cloud);
-                }
-            } else if (currentWeather === 'snowy') {
-                for (let i = 0; i < 25; i++) {
-                    const flake = document.createElement('div');
-                    flake.className = 'snow-flake';
-                    flake.textContent = '❄️';
-                    flake.style.left = `${Math.random() * 100}%`;
-                    flake.style.animationDelay = `${Math.random() * 2}s`;
-                    flake.style.animationDuration = `${2 + Math.random() * 1.5}s`;
-                    layer.appendChild(flake);
-                }
-                triggerSnowFreeze();
-            }
-        }
-
-        let windSweepInterval = null;
-        function startWindSweepInterval() {
-            if (windSweepInterval) clearInterval(windSweepInterval);
-            windSweepInterval = setInterval(() => {
-                if (isGameOver || isPaused || currentWeather !== 'windy') return;
-                const layer = document.getElementById('weatherLayer');
-                if (!layer) return;
-
-                const arrow = document.createElement('div');
-                arrow.className = 'wind-arrow-sweep';
-                arrow.textContent = Math.random() < 0.5 ? '➡️ 💨' : '⬅️ 💨';
-                arrow.style.top = `${Math.random() * 75 + 15}%`;
-                layer.appendChild(arrow);
-                setTimeout(() => arrow.remove(), 3000);
-
-                const balloonLayer = document.getElementById('balloonLayer');
-                if (balloonLayer) {
-                    const balloons = balloonLayer.querySelectorAll('.absolute.rounded-full');
-                    balloons.forEach(b => {
-                        const driftAmount = (Math.random() * 0.3 + 0.25) * (Math.random() < 0.5 ? 70 : -70);
-                        const currentLeft = parseFloat(b.style.left || '100');
-                        const arenaWidth = document.getElementById('gameArena').clientWidth;
-                        b.style.left = `${Math.max(10, Math.min(arenaWidth - 160, currentLeft + driftAmount))}px`;
-                    });
-                }
-            }, 3000);
-        }
-
-        function triggerSnowFreeze() {
-            playSound('freeze');
-            const arena = document.getElementById('gameArena');
-            if (arena) arena.classList.add('frozen-screen');
-            
-            // Actually freeze all balloons by pausing their movement animation temporarily
-            const balloonLayer = document.getElementById('balloonLayer');
-            if (balloonLayer) {
-                const balloons = balloonLayer.querySelectorAll('.absolute.rounded-full');
-                balloons.forEach(b => {
-                    b.style.filter = 'drop-shadow(0 0 15px #93c5fd)';
-                });
-            }
-
-            const freezeDuration = (Math.random() * 2 + 3) * 1000;
-            setTimeout(() => {
-                if (arena) arena.classList.remove('frozen-screen');
-                if (balloonLayer) {
-                    const balloons = balloonLayer.querySelectorAll('.absolute.rounded-full');
-                    balloons.forEach(b => {
-                        b.style.filter = '';
-                    });
-                }
-            }, freezeDuration);
-        }
-
         function checkLevelMilestones() {
             level = Math.floor(score / 300) + 1;
             document.getElementById('levelDisplay').textContent = level;
 
+            // Check achievement progress for level milestones
             checkAchievementsProgress('level', level);
 
             quests.forEach(q => {
@@ -988,6 +785,7 @@
             if (bossData) createBalloonElement(bossData);
         }
 
+        // Trigger Mini-Game Special Events randomly
         setInterval(() => {
             if (isGameOver || isPaused || activeMiniGameEvent) return;
             const randRoll = Math.random();
@@ -1164,27 +962,6 @@
                 if (e && e.preventDefault) e.preventDefault();
                 if (isGameOver || isPaused) return;
 
-                if (currentWeather === 'cloudy') {
-                    const balloonRect = balloon.getBoundingClientRect();
-                    const clouds = arena.querySelectorAll('.cloud-element');
-                    let isBehindCloud = false;
-                    clouds.forEach(cloud => {
-                        const cRect = cloud.getBoundingClientRect();
-                        if (
-                            balloonRect.left < cRect.right &&
-                            balloonRect.right > cRect.left &&
-                            balloonRect.top < cRect.bottom &&
-                            balloonRect.bottom > cRect.top
-                        ) {
-                            isBehindCloud = true;
-                        }
-                    });
-                    if (isBehindCloud) {
-                        showFloatingText(`☁️ Hidden behind cloud!`, balloonRect.left, balloonRect.top, "text-sky-300");
-                        return;
-                    }
-                }
-
                 const clientX = e && e.clientX ? e.clientX : (balloon.getBoundingClientRect().left + 40);
                 const clientY = e && e.clientY ? e.clientY : (balloon.getBoundingClientRect().top + 40);
 
@@ -1222,13 +999,6 @@
             layer.appendChild(balloon);
 
             let speedMultiplier = (selectedType.speedMult || 1.0) * 0.85;
-            
-            // Stormy rain weather slows down balloons moving upward by 20-35%
-            if (currentWeather === 'stormy') {
-                const slowDownFactor = 1 - (Math.random() * 0.15 + 0.20);
-                speedMultiplier *= slowDownFactor;
-            }
-
             if (skillChronoRiftLevel > 0) {
                 speedMultiplier *= (1 - (skillChronoRiftLevel * 0.12));
             }
@@ -1326,6 +1096,7 @@
             const container = document.getElementById('projectileContainer');
             if (!arena || !hand || !container) return;
 
+            // Render selected hand skin image/icon correctly
             const activeHandSkin = handSkins.find(h => h.id === currentHandSkinId);
             hand.textContent = activeHandSkin ? activeHandSkin.icon : '🦾';
 
@@ -1347,7 +1118,7 @@
             hand.classList.add('hand-throwing');
 
             const proj = document.createElement('div');
-            proj.className = 'flying-projectile';
+            proj.className = 'flying-projectile'; // Made bigger, more visible, and enhanced with glow
             proj.style.left = `${startX - 22}px`;
             proj.style.top = `${startY - 45}px`;
             proj.style.setProperty('--dx', `${dx}px`);
@@ -1412,6 +1183,7 @@
 
             showPowerBanner(typeData.name, typeData.powerDesc);
 
+            // Track Hardcore Quest / Achievement progression
             totalBalloonsPoppedInRun++;
             quests.forEach(q => {
                 if (q.id === 'q1' && !q.completed) {
@@ -1550,6 +1322,7 @@
                 coins += Math.round(earnedCoins);
                 maxCoinsEarnedTracker += Math.round(earnedCoins);
 
+                // Update Quests progress
                 quests.forEach(q => {
                     if (q.id === 'q3' && !q.completed) {
                         q.progress = Math.max(q.progress, combo);
@@ -1582,6 +1355,7 @@
             }, 150);
         }
 
+        // Progressive achievements logic: once finished, next hard one appears automatically, keeping saved state permanently without reset
         function checkAchievementsProgress(category, currentVal) {
             achievements.forEach(a => {
                 if (a.category === category && !a.unlocked) {
@@ -1589,6 +1363,7 @@
                         a.unlocked = true;
                         showFloatingText(`🏆 Achievement Unlocked: ${a.title}!`, window.innerWidth / 2, 140, "text-yellow-300");
                         
+                        // Automatically generate the next harder milestone tier for infinite progression
                         let nextTier = a.tier + 1;
                         let nextTarget = a.target * 2.5;
                         let nextReward = a.rewardCoins * 2;
@@ -1669,6 +1444,7 @@
             document.getElementById('coinsDisplay').textContent = coins;
             document.getElementById('levelDisplay').textContent = level;
 
+            // Update hand skin display character/icon live in arena
             const handElem = document.getElementById('throwingHand');
             const activeHandSkin = handSkins.find(h => h.id === currentHandSkinId);
             if (handElem) {
@@ -1790,9 +1566,6 @@
             totalBalloonsPoppedInRun = 0;
             totalBossesDefeated = 0;
             maxCoinsEarnedTracker = 0;
-            currentWeather = 'clear';
-            updateWeatherBannerUI();
-            document.getElementById('weatherLayer').innerHTML = '';
             
             pets.forEach(p => p.unlocked = false);
             objectSkins.forEach(s => s.unlocked = (s.id === 'needle'));
@@ -2008,95 +1781,104 @@
             const upgradesList = document.getElementById('upgradesList');
             upgradesList.innerHTML = '';
             upgrades.forEach(upg => {
-                const isMaxSkill = upg.maxLvl && upg.level >= upg.maxLvl;
-                const row = document.createElement('div');
-                row.className = 'bg-slate-800 p-2.5 rounded-2xl border border-slate-700 flex justify-between items-center';
-                row.innerHTML = `
+                const isMaxed = upg.maxLvl && upg.level >= upg.maxLvl;
+                const item = document.createElement('div');
+                item.className = 'bg-slate-800 p-2.5 rounded-2xl border border-slate-700 flex justify-between items-center';
+                item.innerHTML = `
                     <div>
-                        <h5 class="font-bold text-[11px] text-white">${upg.name} <span class="text-indigo-400 text-[10px]">(Lv. ${upg.level}${upg.maxLvl ? '/' + upg.maxLvl : ''})</span></h5>
-                        <p class="text-[9px] text-slate-400">${upg.desc}</p>
+                        <h4 class="font-bold text-white text-xs">${upg.name} (Lvl ${upg.level}${upg.maxLvl ? '/' + upg.maxLvl : ''})</h4>
+                        <p class="text-[10px] text-slate-400">${upg.desc}</p>
                     </div>
-                    <div>
-                        ${isMaxSkill ? 
-                            '<span class="text-[10px] arcade-font text-emerald-400 font-bold px-2 py-1 bg-emerald-950/80 rounded border border-emerald-600">MAX</span>' :
-                            `<button onclick="buyUpgrade('${upg.id}')" class="bg-yellow-500 hover:bg-yellow-400 text-slate-950 arcade-font text-[10px] px-3 py-1.5 rounded-xl font-bold transition-all shadow">Buy $${upg.cost}</button>`
-                        }
-                    </div>
+                    <button onclick="buyUpgrade('${upg.id}')" ${isMaxed ? 'disabled' : ''} class="${isMaxed ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer'} arcade-font text-[11px] px-2.5 py-1.5 rounded-xl transition-all border border-indigo-400">
+                        ${isMaxed ? 'MAX' : '$' + upg.cost}
+                    </button>
                 `;
-                upgradesList.appendChild(row);
+                upgradesList.appendChild(item);
             });
         }
 
-        function selectHandSkin(id) {
-            const skin = handSkins.find(h => h.id === id);
-            if (skin && skin.unlocked) {
-                currentHandSkinId = id;
+        function renderAchievements() {
+            const questsList = document.getElementById('questsList');
+            questsList.innerHTML = '';
+            quests.forEach(q => {
+                const item = document.createElement('div');
+                item.className = 'bg-slate-800 p-2.5 rounded-2xl border border-slate-700 flex justify-between items-center';
+                item.innerHTML = `
+                    <div>
+                        <h4 class="font-bold text-white text-xs">${q.title}</h4>
+                        <p class="text-[10px] text-slate-400">${q.desc}</p>
+                        <span class="text-[9px] text-amber-300 font-bold">Progress: ${q.progress}/${q.target}</span>
+                    </div>
+                    <div>
+                        ${q.completed && !q.claimed ? 
+                            `<button onclick="claimQuest('${q.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white arcade-font text-[11px] px-3 py-1.5 rounded-xl">Claim +$${q.rewardCoins}</button>` :
+                            q.claimed ?
+                            `<span class="text-[10px] text-slate-400 arcade-font">Claimed ✅</span>` :
+                            `<span class="text-[10px] text-slate-500 arcade-font">In Progress</span>`
+                        }
+                    </div>
+                `;
+                questsList.appendChild(item);
+            });
+
+            const achievementsList = document.getElementById('achievementsList');
+            achievementsList.innerHTML = '';
+            achievements.forEach(a => {
+                const isDone = a.unlocked;
+                const item = document.createElement('div');
+                item.className = 'bg-slate-800 p-2.5 rounded-2xl border border-slate-700 flex justify-between items-center';
+                item.innerHTML = `
+                    <div>
+                        <h4 class="font-bold text-white text-xs">${a.title}</h4>
+                        <p class="text-[10px] text-slate-400">${a.desc}</p>
+                        <span class="text-[9px] text-yellow-300 font-bold">Target: ${a.target.toLocaleString()}</span>
+                    </div>
+                    <div>
+                        ${isDone ? 
+                            `<span class="text-[10px] text-emerald-400 arcade-font font-bold">Completed & Claimed ✅</span>` :
+                            `<span class="text-[10px] text-slate-400 arcade-font">In Progress...</span>`
+                        }
+                    </div>
+                `;
+                achievementsList.appendChild(item);
+            });
+        }
+
+        function claimQuest(id) {
+            const q = quests.find(item => item.id === id);
+            if (q && q.completed && !q.claimed) {
+                q.claimed = true;
+                coins += q.rewardCoins;
                 playSound('coin');
-                saveGameState();
-                renderShop();
                 updateHUD();
-            }
-        }
-
-        function buyHandSkin(id) {
-            const skin = handSkins.find(h => h.id === id);
-            if (skin && coins >= skin.price) {
-                coins -= skin.price;
-                skin.unlocked = true;
-                currentHandSkinId = id;
-                playSound('coin');
-                updateHUD();
+                renderAchievements();
                 saveGameState();
-                renderShop();
             }
         }
 
-        function selectObjectSkin(id) {
-            const skin = objectSkins.find(s => s.id === id);
-            if (skin && skin.unlocked) {
-                currentObjectSkinId = id;
-                playSound('coin');
-                saveGameState();
-                renderShop();
-            }
-        }
-
-        function buyObjectSkin(id) {
-            const skin = objectSkins.find(s => s.id === id);
-            if (skin && coins >= skin.price) {
-                coins -= skin.price;
-                skin.unlocked = true;
-                currentObjectSkinId = id;
-                playSound('coin');
-                updateHUD();
-                saveGameState();
-                renderShop();
-            }
-        }
-
-        function toggleEquipPet(petId) {
-            const index = activePetIds.indexOf(petId);
-            if (index > -1) {
-                activePetIds.splice(index, 1);
+        function toggleEquipPet(id) {
+            if (activePetIds.includes(id)) {
+                activePetIds = activePetIds.filter(pId => pId !== id);
             } else {
                 if (activePetIds.length >= 2) {
-                    showFloatingText(`⚠️ Max 2 Pets Equipped!`, window.innerWidth / 2, 200, "text-red-400");
-                    return;
+                    activePetIds.shift();
                 }
-                activePetIds.push(petId);
+                activePetIds.push(id);
             }
             playSound('coin');
+            updateHUD();
             saveGameState();
             renderShop();
-            updateHUD();
         }
 
-        function buyPet(petId) {
-            const pet = pets.find(p => p.id === petId);
-            if (pet && coins >= pet.price) {
+        function buyPet(id) {
+            const pet = pets.find(p => p.id === id);
+            if (coins >= pet.price) {
                 coins -= pet.price;
                 pet.unlocked = true;
-                if (activePetIds.length < 2) activePetIds.push(petId);
+                if (activePetIds.length < 2) {
+                    activePetIds.push(pet.id);
+                }
                 playSound('coin');
                 updateHUD();
                 saveGameState();
@@ -2104,9 +1886,9 @@
             }
         }
 
-        function startAdForPet(petId) {
-            pendingAdPetId = petId;
-            pendingAdAction = 'unlock_pet';
+        function startAdForPet(id) {
+            pendingAdAction = 'pet';
+            pendingAdPetId = id;
             document.getElementById('adModalOverlay').classList.remove('hidden');
             const timerDisplay = document.getElementById('adTimerDisplay');
             const btnContainer = document.getElementById('adButtonsContainer');
@@ -2128,30 +1910,28 @@
         }
 
         function finishWatchingAd() {
-            document.getElementById('adModalOverlay').classList.add('hidden');
-            if (pendingAdAction === 'revive') {
+            if (pendingAdAction === 'pet' && pendingAdPetId) {
+                const pet = pets.find(p => p.id === pendingAdPetId);
+                if (pet) {
+                    pet.unlocked = true;
+                    if (activePetIds.length < 2) {
+                        activePetIds.push(pet.id);
+                    } else {
+                        activePetIds[0] = pet.id;
+                    }
+                }
+                pendingAdPetId = null;
+            } else if (pendingAdAction === 'revive') {
                 hp = maxHp;
                 isGameOver = false;
                 document.getElementById('gameOverOverlay').classList.add('hidden');
                 playSound('heal');
-                showFloatingText(`💖 Full HP Revive!`, window.innerWidth / 2, 200, "text-emerald-300");
-            } else if (pendingAdAction === 'unlock_pet' && pendingAdPetId) {
-                const pet = pets.find(p => p.id === pendingAdPetId);
-                if (pet) {
-                    pet.unlocked = true;
-                    if (activePetIds.length < 2 && !activePetIds.includes(pet.id)) {
-                        activePetIds.push(pet.id);
-                    }
-                    showFloatingText(`🎉 Pet Unlocked & Equipped!`, window.innerWidth / 2, 200, "text-yellow-300");
-                }
             }
             pendingAdAction = null;
-            pendingAdPetId = null;
+            closeAdModal();
             updateHUD();
             saveGameState();
-            if (!document.getElementById('modalOverlay').classList.contains('hidden')) {
-                renderShop();
-            }
+            renderShop();
         }
 
         function closeAdModal() {
@@ -2160,23 +1940,20 @@
             pendingAdPetId = null;
         }
 
-        function buyUpgrade(id) {
-            const upg = upgrades.find(u => u.id === id);
-            if (!upg) return;
-            if (coins >= upg.cost) {
-                if (upg.maxLvl && upg.level >= upg.maxLvl) return;
-                coins -= upg.cost;
-                upg.level++;
-                upg.cost = Math.round(upg.cost * upg.costMult);
+        function selectHandSkin(id) {
+            currentHandSkinId = id;
+            playSound('coin');
+            saveGameState();
+            updateHUD();
+            renderShop();
+        }
 
-                if (id === 'damage') projectileDamage = upg.level;
-                if (id === 'coin') coinMultiplier = upg.level;
-                if (id === 'autopilot') autoPopperLevel = upg.level;
-                if (id === 'skill_lightning') skillChainLightningLevel = upg.level;
-                if (id === 'skill_vortex') skillGravityVortexLevel = upg.level;
-                if (id === 'skill_sonic') skillSonicBoomLevel = upg.level;
-                if (id === 'skill_chrono') skillChronoRiftLevel = upg.level;
-
+        function buyHandSkin(id) {
+            const skin = handSkins.find(h => h.id === id);
+            if (skin && coins >= skin.price) {
+                coins -= skin.price;
+                skin.unlocked = true;
+                currentHandSkinId = skin.id;
                 playSound('coin');
                 updateHUD();
                 saveGameState();
@@ -2184,119 +1961,98 @@
             }
         }
 
-        function renderAchievements() {
-            const questsList = document.getElementById('questsList');
-            questsList.innerHTML = '';
-            quests.forEach(q => {
-                const row = document.createElement('div');
-                row.className = 'bg-slate-800 p-2.5 rounded-2xl border border-slate-700 flex justify-between items-center';
-                row.innerHTML = `
-                    <div>
-                        <h5 class="font-bold text-[11px] text-amber-300">${q.title} <span class="text-slate-400 text-[10px]">(${q.progress}/${q.target})</span></h5>
-                        <p class="text-[9px] text-slate-400">${q.desc}</p>
-                    </div>
-                    <div>
-                        ${q.claimed ? 
-                            '<span class="text-[10px] text-slate-500 arcade-font">Claimed</span>' :
-                            q.completed ?
-                            `<button onclick="claimQuest('${q.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white arcade-font text-[10px] px-3 py-1.5 rounded-xl font-bold shadow animate-bounce">Claim +$${q.rewardCoins}</button>` :
-                            `<span class="text-[10px] text-slate-400 arcade-font">In Progress</span>`
-                        }
-                    </div>
-                `;
-                questsList.appendChild(row);
-            });
-
-            const achievementsList = document.getElementById('achievementsList');
-            achievementsList.innerHTML = '';
-            achievements.forEach(ach => {
-                const row = document.createElement('div');
-                row.className = `p-2.5 rounded-2xl border flex justify-between items-center ${ach.unlocked ? 'bg-indigo-950/80 border-indigo-400' : 'bg-slate-800 border-slate-700'}`;
-                row.innerHTML = `
-                    <div>
-                        <h5 class="font-bold text-[11px] ${ach.unlocked ? 'text-yellow-300' : 'text-slate-300'}">${ach.title}</h5>
-                        <p class="text-[9px] text-slate-400">${ach.desc} — Reward: +$${ach.rewardCoins}</p>
-                    </div>
-                    <div>
-                        <span class="text-[10px] arcade-font px-2 py-1 rounded ${ach.unlocked ? 'bg-yellow-500 text-slate-950 font-bold' : 'bg-slate-700 text-slate-400'}">${ach.unlocked ? 'Unlocked 🎉' : 'Locked'}</span>
-                    </div>
-                `;
-                achievementsList.appendChild(row);
-            });
+        function selectObjectSkin(id) {
+            currentObjectSkinId = id;
+            playSound('coin');
+            saveGameState();
+            renderShop();
         }
 
-        function claimQuest(qId) {
-            const q = quests.find(item => item.id === qId);
-            if (q && q.completed && !q.claimed) {
-                q.claimed = true;
-                coins += q.rewardCoins;
+        function buyObjectSkin(id) {
+            const skin = objectSkins.find(s => s.id === id);
+            if (skin && coins >= skin.price) {
+                coins -= skin.price;
+                skin.unlocked = true;
+                currentObjectSkinId = skin.id;
                 playSound('coin');
                 updateHUD();
                 saveGameState();
-                renderAchievements();
-                showFloatingText(`🎉 Claimed +$${q.rewardCoins}!`, window.innerWidth / 2, 200, "text-yellow-300");
+                renderShop();
             }
         }
 
-        // Periodic Pet Action Trigger
+        function buyUpgrade(id) {
+            const upg = upgrades.find(u => u.id === id);
+            if (!upg) return;
+
+            if (coins >= upg.cost) {
+                coins -= upg.cost;
+                upg.level++;
+                upg.cost = Math.round(upg.cost * upg.costMult);
+                playSound('coin');
+
+                if (id === 'damage') {
+                    projectileDamage = upg.level;
+                } else if (id === 'coin') {
+                    coinMultiplier = upg.level;
+                } else if (id === 'autopilot') {
+                    autoPopperLevel = upg.level;
+                } else if (id === 'skill_lightning') {
+                    skillChainLightningLevel = upg.level;
+                } else if (id === 'skill_vortex') {
+                    skillGravityVortexLevel = upg.level;
+                } else if (id === 'skill_sonic') {
+                    skillSonicBoomLevel = upg.level;
+                } else if (id === 'skill_chrono') {
+                    skillChronoRiftLevel = upg.level;
+                }
+
+                updateHUD();
+                saveGameState();
+                renderShop();
+            }
+        }
+
+        // Auto-thrower drone and pet timer loops
         setInterval(() => {
             if (isGameOver || isPaused) return;
-            if (activePetIds.length === 0) return;
-
             const layer = document.getElementById('balloonLayer');
             if (!layer) return;
             const allBalloons = layer.querySelectorAll('.absolute.rounded-full');
-            if (allBalloons.length === 0) return;
-
-            activePetIds.forEach(petId => {
-                if (petId === 'sparky' || petId === 'ad_pixel') {
-                    const randomB = allBalloons[Math.floor(Math.random() * allBalloons.length)];
-                    if (randomB && randomB._popByPet) {
-                        const rect = randomB.getBoundingClientRect();
-                        randomB._popByPet(rect.left + 20, rect.top + 20, '⚡');
-                    }
-                } else if (petId === 'midas' || petId === 'ad_quantum') {
-                    const bonus = petId === 'ad_quantum' ? 12 : 5;
-                    coins += bonus;
-                    playSound('coin');
-                    updateHUD();
-                } else if (petId === 'buster' || petId === 'ad_phoenix') {
-                    let lowestB = null;
-                    let lowestHpVal = 999;
-                    allBalloons.forEach(b => {
-                        const hpB = b.querySelector('.balloon-hp');
-                        if (hpB) {
-                            const val = parseInt(hpB.textContent) || 1;
-                            if (val < lowestHpVal) {
-                                lowestHpVal = val;
-                                lowestB = b;
-                            }
-                        }
-                    });
-                    if (lowestB && lowestB._popByPet) {
-                        const rect = lowestB.getBoundingClientRect();
-                        lowestB._popByPet(rect.left + 20, rect.top + 20, '🐾');
-                    }
+            
+            if (autoPopperLevel > 0 && allBalloons.length > 0) {
+                const targetB = allBalloons[Math.floor(Math.random() * allBalloons.length)];
+                if (targetB && targetB._popByPet) {
+                    const rect = targetB.getBoundingClientRect();
+                    targetB._popByPet(rect.left + 20, rect.top + 20, '🚀');
                 }
-            });
-        }, 2800);
-
-        // Auto-thrower drone upgrade trigger
-        setInterval(() => {
-            if (isGameOver || isPaused || autoPopperLevel <= 0) return;
-            const layer = document.getElementById('balloonLayer');
-            if (!layer) return;
-            const allBalloons = layer.querySelectorAll('.absolute.rounded-full');
-            if (allBalloons.length === 0) return;
-
-            const targetB = allBalloons[Math.floor(Math.random() * allBalloons.length)];
-            if (targetB && targetB._popByPet) {
-                const rect = targetB.getBoundingClientRect();
-                targetB._popByPet(rect.left + 20, rect.top + 20, '🤖');
             }
-        }, Math.max(800, 3500 - (autoPopperLevel * 500)));
 
-        // Main Spawner Loop
+            if (activePetIds.length > 0 && allBalloons.length > 0) {
+                activePetIds.forEach(pId => {
+                    if (pId === 'sparky' || pId === 'ad_pixel') {
+                        const targetB = allBalloons[Math.floor(Math.random() * allBalloons.length)];
+                        if (targetB && targetB._popByPet) {
+                            const rect = targetB.getBoundingClientRect();
+                            targetB._popByPet(rect.left + 20, rect.top + 20, pId === 'ad_pixel' ? '🐉' : '⚡');
+                        }
+                    } else if (pId === 'midas' || pId === 'ad_quantum') {
+                        const earned = pId === 'ad_quantum' ? 12 : 5;
+                        coins += earned;
+                        maxCoinsEarnedTracker += earned;
+                        updateHUD();
+                    } else if (pId === 'buster' || pId === 'ad_phoenix') {
+                        let lowestB = allBalloons[0];
+                        if (lowestB && lowestB._popByPet) {
+                            const rect = lowestB.getBoundingClientRect();
+                            lowestB._popByPet(rect.left + 20, rect.top + 20, pId === 'ad_phoenix' ? '🔥' : '🐾');
+                        }
+                    }
+                });
+            }
+        }, 2200);
+
+        // Main balloon spawn loop
         setInterval(() => {
             if (!isGameOver && !isPaused) {
                 spawnBalloon();
